@@ -70,19 +70,19 @@ const delay = (function () {
 })();
 
 class Datatable extends PureComponent {
-  
+
   constructor (props) {
     super(props);
-    
+
     this.updateQuery = this.updateQuery.bind(this);
-    
+
     this.state = {
       value: '',
       query: '',
       currentSort: {},
     };
   }
-  
+
   toggleSort = column => {
     let currentSort;
     if (!this.state.currentSort[column]) {
@@ -94,7 +94,7 @@ class Datatable extends PureComponent {
     }
     this.setState({ currentSort });
   };
-  
+
   updateQuery (value) {
     this.setState({
       value: value
@@ -105,10 +105,10 @@ class Datatable extends PureComponent {
       });
     }, 700);
   }
-  
+
   render () {
     if (this.props.data) {
-      
+
       return <Components.DatatableContents
         columns={this.props.data.length ? Object.keys(this.props.data[0]) : undefined}
         {...this.props}
@@ -118,9 +118,9 @@ class Datatable extends PureComponent {
         showEdit={false}
         showNew={false}
       />;
-      
+
     } else {
-      
+
       const {
         className,
         collection,
@@ -130,28 +130,28 @@ class Datatable extends PureComponent {
         currentUser,
         classes,
       } = this.props;
-      
+
       const listOptions = {
         collection: collection,
         ...options,
       };
-      
+
       const DatatableWithMulti = withMulti(listOptions)(Components.DatatableContents);
-      
+
       // add _id to orderBy when we want to sort a column, to avoid breaking the graphql() hoc;
       // see https://github.com/VulcanJS/Vulcan/issues/2090#issuecomment-433860782
       // this.state.currentSort !== {} is always false, even when console.log(this.state.currentSort) displays
       // {}. So we test on the length of keys for this object.
       const orderBy = Object.keys(this.state.currentSort).length == 0 ? {} :
-        { ...this.state.currentSort, _id: -1 };
-      
+          { ...this.state.currentSort, _id: -1 };
+
       return (
         <div className={classNames('datatable', `datatable-${collection._name}`, classes.root,
-          className)}>
+            className)}>
           {/* DatatableAbove Component part*/}
           {
             showSearch &&
-            
+
             <Components.SearchInput value={this.state.query}
                                     updateQuery={this.updateQuery}
                                     className={classes.search}
@@ -160,14 +160,14 @@ class Datatable extends PureComponent {
           }
           {
             showNew &&
-            
+
             <Components.NewButton collection={collection}
                                   variant="fab"
                                   color="primary"
                                   className={classes.addButton}
             />
           }
-          
+
           <DatatableWithMulti {...this.props}
                               collection={collection}
                               terms={{ query: this.state.query, orderBy: orderBy }}
@@ -263,20 +263,20 @@ const DatatableContents = ({
                              paginationTerms,
                              setPaginationTerms
                            }) => {
-  
+
   if (loading) {
     return <Components.Loading/>;
   } else if (!results || !results.length) {
     return emptyState || null;
   }
-  
+
   if (queryDataRef) queryDataRef(this.props);
-  
+
   const denseClass = dense && classes[dense + 'Table'];
-  
+
   // Pagination functions
   const getPage = (paginationTerms) => (parseInt((paginationTerms.limit - 1) / paginationTerms.itemsPerPage));
-  
+
   const onChangePage = (event, page) => {
     setPaginationTerms({
       itemsPerPage: paginationTerms.itemsPerPage,
@@ -284,7 +284,7 @@ const DatatableContents = ({
       offset: page * paginationTerms.itemsPerPage
     });
   };
-  
+
   const onChangeRowsPerPage = (event) => {
     let value = event.target.value;
     let offset = Math.max(0, parseInt((paginationTerms.limit - paginationTerms.itemsPerPage) / value) * value);
@@ -295,48 +295,48 @@ const DatatableContents = ({
       offset: offset
     });
   };
-  
+
   return (
     <React.Fragment>
-      { 
+      {
         (title)?
-        <Toolbar>
-          <Typography variant="h6" id="tableTitle">
-            title
-          </Typography>
-        </Toolbar>
-        :null
+          <Toolbar>
+            <Typography variant="h6" id="tableTitle">
+              title
+            </Typography>
+          </Toolbar>
+          :null
       }
       <Table className={classNames(classes.table, denseClass)}>
-        {
-          columns && 
-          <TableHead className={classes.tableHead}>
-            <TableRow className={classes.tableRow}>
-              {
-                _.sortBy(columns, column => column.order).map(
-                  (column, index) =>
-                    <Components.DatatableHeader key={index}
-                                                collection={collection}
-                                                intlNamespace={intlNamespace}
-                                                column={column}
-                                                classes={classes}
-                                                toggleSort={toggleSort}
-                                                currentSort={currentSort}
-                    />
-                )
-              }
-              {
-                (showEdit || editComponent) &&
-                
-                <TableCell className={classes.tableCell}/>
-              }
-            </TableRow>
-          </TableHead>
-        }
-        
+      {
+        columns &&
+        <TableHead className={classes.tableHead}>
+          <TableRow className={classes.tableRow}>
+            {
+              _.sortBy(columns, column => column.order).map(
+                (column, index) =>
+                  <Components.DatatableHeader key={index}
+                                              collection={collection}
+                                              intlNamespace={intlNamespace}
+                                              column={column}
+                                              classes={classes}
+                                              toggleSort={toggleSort}
+                                              currentSort={currentSort}
+                  />
+              )
+            }
+            {
+              (showEdit || editComponent) &&
+
+              <TableCell className={classes.tableCell}/>
+            }
+          </TableRow>
+        </TableHead>
+      }
+
         {
           results &&
-          
+
           <TableBody className={classes.tableBody}>
             {
               results.map(
@@ -356,10 +356,10 @@ const DatatableContents = ({
             }
           </TableBody>
         }
-        
+
         {
           footerData &&
-          
+
           <TableFooter className={classes.tableFooter}>
             <TableRow className={classes.tableRow}>
               {
@@ -372,18 +372,18 @@ const DatatableContents = ({
               }
               {
                 (showEdit || editComponent) &&
-                
+
                 <TableCell className={classes.tableCell}/>
               }
             </TableRow>
           </TableFooter>
-          
+
         }
-      
+
       </Table>
       {
         paginate &&
-        
+
         <TablePagination
           component="div"
           count={totalCount}
@@ -401,7 +401,7 @@ const DatatableContents = ({
       }
       {
         !paginate && loadMore &&
-        
+
         <Components.LoadMore className={classes.loadMore}
                              count={count}
                              totalCount={totalCount}
@@ -425,10 +425,10 @@ DatatableHeader Component
 const DatatableHeader = ({ collection, intlNamespace, column, classes, toggleSort, currentSort }, { intl }) => {
   const columnName = typeof column === 'string' ? column : column.name || column.label;
   let formattedLabel = '';
-  
+
   if (collection) {
     const schema = collection.simpleSchema()._schema;
-    
+
     /*
     use either:
 
@@ -443,11 +443,11 @@ const DatatableHeader = ({ collection, intlNamespace, column, classes, toggleSor
         defaultMessage: defaultMessage
       }) :
       '';
-    
+
     // if sortable is a string, use it as the name of the property to sort by. If it's just `true`, use
     // column.name
     const sortPropertyName = typeof column.sortable === 'string' ? column.sortable : column.name;
-    
+
     if (column.sortable) {
       return <Components.DatatableSorter name={sortPropertyName}
                                          label={formattedLabel}
@@ -466,7 +466,7 @@ const DatatableHeader = ({ collection, intlNamespace, column, classes, toggleSor
   } else {
     formattedLabel = intl.formatMessage({ id: columnName, defaultMessage: columnName });
   }
-  
+
   return <TableCell
     className={classNames(classes.tableHeadCell, column.headerClass)}>{formattedLabel}</TableCell>;
 };
@@ -537,20 +537,20 @@ const DatatableRow = ({
                         handleRowClick,
                         classes,
                       }, { intl }) => {
-  
+
   const EditComponent = editComponent;
-  
+
   if (typeof rowClass === 'function') {
     rowClass = rowClass(document);
   }
-  
+
   return (
     <TableRow
       className={classNames('datatable-item', classes.tableRow, rowClass, handleRowClick && classes.clickRow)}
       onClick={handleRowClick && (event => handleRowClick(event, document))}
       hover
     >
-      
+
       {
         _.sortBy(columns, column => column.order).map(
           (column, index) =>
@@ -561,19 +561,19 @@ const DatatableRow = ({
                                       classes={classes}
             />)
       }
-      
+
       {
         (showEdit || editComponent) &&
-        
+
         <TableCell className={classes.editCell}>
           {
             EditComponent &&
-            
+
             <EditComponent collection={collection} document={document} refetch={refetch}/>
           }
           {
             showEdit &&
-            
+
             <Components.EditButton collection={collection}
                                    document={document}
                                    buttonClasses={{ button: classes.editButton }}
@@ -581,7 +581,7 @@ const DatatableRow = ({
           }
         </TableCell>
       }
-    
+
     </TableRow>
   );
 };
@@ -604,7 +604,7 @@ const DatatableCell = ({ column, document, currentUser, classes }) => {
   const Component = column.component ||
     Components[column.componentName] ||
     Components.DatatableDefaultCell;
-  
+
   const columnName = typeof column === 'string' ? column : column.name;
   const className = typeof columnName === 'string' ?
     `datatable-item-${columnName.toLowerCase()}` :
@@ -614,7 +614,7 @@ const DatatableCell = ({ column, document, currentUser, classes }) => {
     typeof column.cellClass === 'string' ?
       column.cellClass :
       null;
-  
+
   return (
     <TableCell className={classNames(classes.tableCell, cellClass, className)}>
       <Component column={column}

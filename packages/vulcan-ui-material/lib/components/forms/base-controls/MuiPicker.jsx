@@ -8,7 +8,7 @@ import MuiFormHelper from './MuiFormHelper';
 import TextField from '@material-ui/core/TextField';
 
 import moment from 'moment';
-import 'moment-timezone';
+//import 'moment-timezone';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -41,13 +41,13 @@ const MuiPicker = createReactClass({
     formatValue: PropTypes.func,
     hideClear: PropTypes.bool,
   },
-  
+
   getDefaultProps: function () {
     return {
       type: 'date',
     };
   },
-  
+
   handleChange: function (event) {
     let value = event.target.value;
     if (this.props.scrubValue) {
@@ -55,7 +55,7 @@ const MuiPicker = createReactClass({
     }
     this.props.onChange(value);
   },
-  
+
   render: function () {
     const { classes, disabled, autoFocus } = this.props;
     const value = moment(this.props.value, dateFormat, true).isValid() ? this.props.value : moment(this.props.value).format(dateFormat);
